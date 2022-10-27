@@ -1,0 +1,43 @@
+## In excel make a csv of your latitude and longitude, with the headings Lat and Long, make sure to include minus signs where needed. You may also
+## include a column saying what the proxy are - see example csv.
+
+
+## Set your working directory to wherever you saved the file, you can do this by going to session, set working directory 
+##and then navigating to the folder where your csv is saved
+
+setwd("~/Documents") ## Another way is to set it using code. You can change this to the folder where your csv is saved.
+
+## Read in csv file 
+
+Sites<-read.csv("REPLACEWITHWHATEVERYOUCALLEDYOURCSV.csv") ## Make sure you put in here whatever your csv is called, capitals matter! leave .csv in at the end
+
+#### Create plot to see where we have different proxies at the same location ####
+
+#Uncomment the first time to install the package, recomment once installed. 
+##Packages in R let us plot graphs or let us do certain statistical analyses
+
+#install.packages("maps") 
+#intall.packages("tidyverse")
+
+require(maps) # here we are telling R to load the maps package
+library(tidyverse) # here telling R to load the tidyverse package
+
+world_map <- map_data("world") # here we are telling R to make a basemap of the world
+
+## Plot the graph - this will take a short while
+map<-ggplot(Sites, aes(x = Long, y = Lat)) + #Tell R the data set and the x and y. 
+  theme_bw()+ # All of this sets the themes, colour and design of the map
+  coord_fixed()+
+  theme(panel.grid.major.x = element_blank())+ # Gets rid of background lines
+  theme(panel.grid.minor.x = element_blank())+
+  theme(panel.grid.major.y = element_blank())+
+  theme(panel.grid.minor.y = element_blank())+
+  theme(axis.title.x = element_blank())+ # Gets rid of axes labels
+  theme(axis.title.y = element_blank())+
+  geom_polygon(data=world_map,aes(x=long,y=lat,group=group),fill="grey", colour = NA)+ # Creates basemap, you can change the fill to adjust colour
+  geom_point(data = Sites, aes(x = Long, y = Lat,col=Proxy), size = 2) # Plots the dots of the proxy locations and tells R to colour by proxy
+
+
+## View the map you can save by going to export in the bottom right panel ->
+
+map
